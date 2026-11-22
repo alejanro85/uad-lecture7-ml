@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>От данных к решению — веб-формы лекции 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#37B34A; --green-d:#2A8638; --dark:#244128; --purple:#724796; --orange:#DA4927; --peach:#F39768;
+  --ink:#1E2A20; --muted:#5E636B; --line:#E2E5E2; --bg:#FFFFFF; --soft:#F2F5F2; --soft2:#F7F4FA;
+  --ev:#DA4927; --ev-l:#FBE3DC; --ne:#37B34A; --ne-l:#DCEFDD;
+  --r:10px; --sp:clamp(16px,2.2vw,28px);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Onest,system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:16px;line-height:1.45}
+a{color:var(--purple)}
+header{background:var(--dark);color:#fff;padding:22px var(--sp) 18px;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;
+  background:linear-gradient(90deg,var(--orange) 0 25%,var(--peach) 25% 33%,var(--purple) 33% 50%,var(--green) 50%)}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:42px;height:42px;border-radius:6px;background:var(--green);display:grid;place-items:center;font-weight:800;font-size:28px;color:#fff}
+header h1{font-size:clamp(20px,2.4vw,28px);margin:0;font-weight:800;letter-spacing:.01em}
+header p{margin:4px 0 0;color:#CFE6D2;font-size:14px}
+main{max-width:1280px;margin:0 auto;padding:var(--sp)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.tabs button{font:inherit;font-size:14px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--dark);color:#fff;border-color:var(--dark)}
+.tabs button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.q{background:var(--soft2);border-left:5px solid var(--purple);border-radius:var(--r);padding:14px 18px;margin-bottom:18px}
+.q b{color:var(--purple)}
+.q small{display:block;color:var(--muted);margin-top:4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:18px;background:#fff}
+.card h2{font-size:18px;margin:0 0 4px;color:var(--dark)}
+.card .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+@media (max-width:520px){.fields{grid-template-columns:1fr}}
+.f label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:4px;gap:8px}
+.f label output{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--green-d)}
+select,input[type=number]{width:100%;font:inherit;font-size:14px;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.result{margin-top:16px;padding:14px;border-radius:var(--r);background:var(--soft);display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center}
+.pbig{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.decision{font-size:18px;font-weight:600}
+.bar{grid-column:1/-1;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--nl) 0 var(--t),var(--el) var(--t) 100%);position:relative}
+.bar i{position:absolute;top:-4px;width:4px;height:22px;background:var(--dark);border-radius:2px;transform:translateX(-2px)}
+.bar s{position:absolute;top:-6px;width:2px;height:26px;background:var(--orange);text-decoration:none}
+.legend{grid-column:1/-1;font-size:12px;color:var(--muted)}
+.thr{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.thr input{flex:1}
+.thr output{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;min-width:44px}
+.cm{display:grid;grid-template-columns:110px 1fr 1fr;gap:4px;font-size:13px}
+.cm div{padding:10px;border-radius:6px;text-align:center}
+.cm .h{background:var(--dark);color:#fff;font-weight:600}
+.cm .rh{background:var(--soft);font-weight:600;text-align:left}
+.cm .tp{background:var(--green-d);color:#fff}
+.cm .fn{background:#FBE3DC}
+.cm .fp{background:#FCEBDD}
+.cm .tn{background:var(--ne-l)}
+.cm b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+@media (max-width:520px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--soft);border-radius:8px;padding:8px 10px}
+.kpi span{display:block;font-size:12px;color:var(--muted)}
+.kpi b{font-size:20px;color:var(--dark);font-variant-numeric:tabular-nums}
+.costs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.costs label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+svg text{font-family:Onest,sans-serif}
+.weights .row{display:grid;grid-template-columns:minmax(140px,38%) 1fr 56px;gap:10px;align-items:center;font-size:13px;margin:3px 0}
+.weights .track{position:relative;height:16px;background:linear-gradient(90deg,transparent calc(50% - 1px),var(--line) calc(50% - 1px) calc(50% + 1px),transparent calc(50% + 1px))}
+.weights .track i{position:absolute;top:2px;height:12px;border-radius:3px}
+.weights .v{text-align:right;font-variant-numeric:tabular-nums}
+.wide{grid-column:1/-1}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.btn{display:inline-block;padding:9px 14px;border-radius:8px;background:var(--green-d);color:#fff;text-decoration:none;font-size:14px;font-weight:600}
+.btn.alt{background:#fff;color:var(--dark);border:1px solid var(--dark)}
+footer{max-width:1280px;margin:0 auto;padding:10px var(--sp) 30px;color:var(--muted);font-size:13px}
+.err{color:var(--orange)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div><h1>От данных к решению: веб-формы для кейсов лекции 7</h1>
+    <p>Управление и аналитика данных на предприятии · логистическая регрессия без сервера, прямо в браузере</p></div>
+  </div>
+</header>
+<main>
+  <nav class="tabs" role="tablist" id="tabs" aria-label="Кейсы"></nav>
+  <section class="q" id="question"></section>
+  <div class="grid">
+    <section class="card" aria-labelledby="h-form">
+      <h2 id="h-form">Форма «что если»</h2>
+      <p class="sub">Меняйте значения — вероятность пересчитывается сразу. Диапазоны взяты из данных (1–99 перцентиль).</p>
+      <div class="fields" id="fields"></div>
+      <div class="result" id="result" aria-live="polite"></div>
+    </section>
+    <section class="card" aria-labelledby="h-thr">
+      <h2 id="h-thr">Порог решения и цена ошибок</h2>
+      <p class="sub" id="thr-sub"></p>
+      <div class="thr"><label for="thr">Порог</label><input type="range" id="thr" min="0.05" max="0.95" step="0.05" value="0.5"><output id="thr-v">0,50</output></div>
+      <div class="cm" id="cm"></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="costs">
+        <div><label for="cfp" id="cfp-l">Цена ложной тревоги</label><input type="number" id="cfp" min="0" step="1"></div>
+        <div><label for="cfn" id="cfn-l">Цена пропуска</label><input type="number" id="cfn" min="0" step="1"></div>
+      </div>
+      <svg id="costchart" viewBox="0 0 520 170" width="100%" role="img" aria-label="Суммарная цена ошибок в зависимости от порога"></svg>
+    </section>
+    <section class="card wide weights" aria-labelledby="h-w">
+      <h2 id="h-w">Что двигает вероятность</h2>
+      <p class="sub" id="w-sub"></p>
+      <div id="weights"></div>
+      <div class="links" id="links"></div>
+    </section>
+  </div>
+</main>
+<footer>
+  Данные: открытые наборы Kaggle/UCI и синтетический датасет лекции. Модели обучены скриптом
+  <a href="https://github.com/alejanro85/uad-lecture7-ml/blob/main/webapps/export_static.py">export_static.py</a>
+  тем же конвейером, что в блокнотах Colab. · <a href="https://github.com/alejanro85/uad-lecture7-ml">Репозиторий лекции</a>
+</footer>
+<script>
+const COLAB = "https://colab.research.google.com/github/alejanro85/uad-lecture7-ml/blob/main/notebooks/";
+const NB = {students:"00_students_etalon", grid:"02_energy_smart_grid", concrete:"03_construction_concrete",
+            ai4i:"04_production_predictive_maintenance", flare:"05_reverse_task_synthetic_dataset"};
+const fmt = (v, d=2) => v.toFixed(d).replace(".", ",");
+const pct = v => (v*100).toFixed(1).replace(".", ",") + "%";
+let M, key, state = {};
+
+// инженерные признаки — те же формулы, что в cases.py
+const ENG = {
+  concrete: r => ({...r, log_age: Math.log(Math.max(r.age_days, 1)), w_c: r.water / Math.max(r.cement, 1)}),
+  flare: r => ({...r, tilt_total: Math.hypot(r.tilt_x_deg, r.tilt_y_deg)}),
+};
+function predict(c, raw){
+  const r = c.engineer ? ENG[c.engineer](raw) : raw, m = c.model;
+  let z = m.intercept;
+  m.num.forEach((f, i) => { z += m.num_coef[i] * (r[f] - m.mean[i]) / m.scale[i]; });
+  let k = 0;
+  for (const [f, vals] of Object.entries(m.cat)) vals.forEach(v => { z += m.cat_coef[k++] * (String(r[f]) === v ? 1 : 0); });
+  return 1 / (1 + Math.exp(-z));
+}
+function confusion(c, t){
+  let tp=0, fn=0, fp=0, tn=0;
+  c.test.y.forEach((y, i) => { const p = c.test.p[i] >= t; if (y && p) tp++; else if (y) fn++; else if (p) fp++; else tn++; });
+  const n = tp+fn+fp+tn;
+  return {tp, fn, fp, tn, acc:(tp+tn)/n, prec: tp+fp ? tp/(tp+fp) : 0, rec: tp+fn ? tp/(tp+fn) : 0};
+}
+function el(tag, attrs={}, html=""){ const e = document.createElement(tag); Object.assign(e, attrs); if (html) e.innerHTML = html; return e; }
+
+function renderTabs(){
+  const nav = document.getElementById("tabs"); nav.innerHTML = "";
+  Object.entries(M).forEach(([k, c]) => {
+    const b = el("button", {role:"tab", type:"button"}, c.title);
+    b.setAttribute("aria-selected", k === key);
+    b.onclick = () => { key = k; location.hash = k; renderAll(); };
+    nav.append(b);
+  });
+}
+function renderCase(){
+  const c = M[key];
+  const root = document.documentElement.style;
+  root.setProperty("--ev", c.event_is_good ? "#37B34A" : "#DA4927");
+  root.setProperty("--ev-l", c.event_is_good ? "#DCEFDD" : "#FBE3DC");
+  root.setProperty("--ne-l", c.event_is_good ? "#FBE3DC" : "#DCEFDD");
+  document.getElementById("question").innerHTML =
+    `<b>Шаг 1. Вопрос:</b> ${c.question}<small>Профиль: ${c.profile} · событие (класс 1): «${c.event}» · источник: <a href="${c.source}">${c.source.replace(/^https?:\/\//, "").slice(0, 70)}</a></small>`;
+  const box = document.getElementById("fields"); box.innerHTML = ""; state = {};
+  c.inputs.forEach(inp => {
+    const id = "in-" + inp.name.replace(/\W/g, "_"), d = el("div", {className:"f"});
+    state[inp.name] = inp.value;
+    if (inp.type === "num"){
+      d.innerHTML = `<label for="${id}"><span>${inp.label}</span><output id="${id}-o">${fmt(inp.value, inp.step < 1 ? 2 : 0)}</output></label>`;
+      const r = el("input", {type:"range", id, min:inp.min, max:inp.max, step:inp.step, value:inp.value});
+      r.oninput = () => { state[inp.name] = +r.value; document.getElementById(id+"-o").textContent = fmt(+r.value, inp.step < 1 ? 2 : 0); renderResult(); };
+      d.append(r);
+    } else {
+      d.innerHTML = `<label for="${id}"><span>${inp.label}</span></label>`;
+      const s = el("select", {id});
+      inp.options.forEach(o => s.append(el("option", {value:o, selected:o === inp.value}, o)));
+      s.onchange = () => { state[inp.name] = s.value; renderResult(); };
+      d.append(s);
+    }
+    box.append(d);
+  });
+  document.getElementById("cfp").value = c.cost_fp; document.getElementById("cfn").value = c.cost_fn;
+  document.getElementById("cfp-l").textContent = "Ложная тревога: " + c.fp_text;
+  document.getElementById("cfn-l").textContent = "Пропуск: " + c.fn_text;
+  document.getElementById("thr-sub").textContent = `Тестовая выборка: ${c.test.y.length} объектов, которые модель не видела при обучении.`;
+  renderWeights();
+  const L = document.getElementById("links"); L.innerHTML = "";
+  L.append(el("a", {className:"btn", href: COLAB + NB[key] + ".ipynb", target:"_blank", rel:"noopener"}, "Полный анализ в Colab"));
+  L.append(el("a", {className:"btn alt", href:"https://github.com/alejanro85/uad-lecture7-ml/tree/main/webapps", target:"_blank", rel:"noopener"}, "Как сделать такую форму"));
+}
+function renderResult(){
+  const c = M[key], t = +document.getElementById("thr").value, p = predict(c, state);
+  const ev = p >= t;
+  const res = document.getElementById("result");
+  res.style.setProperty("--t", (t*100) + "%");
+  res.style.setProperty("--el", getComputedStyle(document.documentElement).getPropertyValue("--ev-l"));
+  res.style.setProperty("--nl", getComputedStyle(document.documentElement).getPropertyValue("--ne-l"));
+  res.innerHTML = `<div class="pbig">${pct(p)}</div>
+    <div><div class="decision">Решение: ${ev ? c.event : c.no_event}</div>
+    <div style="font-size:13px;color:var(--muted)">вероятность «${c.event}» при пороге ${fmt(t)}</div></div>
+    <div class="bar" aria-hidden="true"><s style="left:${t*100}%"></s><i style="left:${p*100}%"></i></div>
+    <div class="legend">Тёмная метка — вероятность объекта, оранжевая — порог. Правее порога модель отвечает «${c.event}».</div>`;
+}
+function renderThreshold(){
+  const c = M[key], t = +document.getElementById("thr").value, m = confusion(c, t);
+  document.getElementById("thr-v").textContent = fmt(t);
+  const base = Math.max(...[0, 1].map(v => c.test.y.filter(y => y === v).length)) / c.test.y.length;
+  document.getElementById("cm").innerHTML = `
+    <div></div><div class="h">модель: ${c.event}</div><div class="h">модель: ${c.no_event}</div>
+    <div class="rh">факт: ${c.event}</div><div class="tp"><b>${m.tp}</b>найдены</div><div class="fn"><b>${m.fn}</b>пропуск</div>
+    <div class="rh">факт: ${c.no_event}</div><div class="fp"><b>${m.fp}</b>ложная тревога</div><div class="tn"><b>${m.tn}</b>верно</div>`;
+  document.getElementById("kpis").innerHTML = [
+    ["Accuracy", fmt(m.acc, 3) + `<span>базовая ${fmt(base, 3)}</span>`], ["Precision", fmt(m.prec, 3)],
+    ["Recall", fmt(m.rec, 3)], ["Найдено", `${m.tp} из ${m.tp + m.fn}`]
+  ].map(([a, b]) => `<div class="kpi"><span>${a}</span><b>${b}</b></div>`).join("");
+  renderCost(t); renderResult();
+}
+function renderCost(t){
+  const c = M[key], cfp = +document.getElementById("cfp").value || 0, cfn = +document.getElementById("cfn").value || 0;
+  const ts = []; for (let v = 0.05; v < 0.951; v += 0.05) ts.push(+v.toFixed(2));
+  const cs = ts.map(v => { const m = confusion(c, v); return m.fp*cfp + m.fn*cfn; });
+  const W = 520, H = 170, L = 46, R = 10, T = 14, B = 30, mx = Math.max(...cs) || 1;
+  const x = v => L + (v - 0.05) / 0.9 * (W - L - R), y = v => T + (1 - v / mx) * (H - T - B);
+  const best = ts[cs.indexOf(Math.min(...cs))];
+  let s = `<line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#B9C2BB"/>`;
+  [0, 0.5, 1].forEach(f => s += `<text x="${L-6}" y="${y(mx*f)+4}" font-size="11" text-anchor="end" fill="#5E636B">${Math.round(mx*f)}</text>
+     <line x1="${L}" x2="${W-R}" y1="${y(mx*f)}" y2="${y(mx*f)}" stroke="#E2E5E2"/>`);
+  [0.1, 0.3, 0.5, 0.7, 0.9].forEach(v => s += `<text x="${x(v)}" y="${H-B+16}" font-size="11" text-anchor="middle" fill="#5E636B">${fmt(v,1)}</text>`);
+  s += `<polyline fill="none" stroke="#244128" stroke-width="2.5" points="${ts.map((v,i)=>x(v)+","+y(cs[i])).join(" ")}"/>`;
+  s += `<line x1="${x(t)}" x2="${x(t)}" y1="${T}" y2="${H-B}" stroke="#724796" stroke-dasharray="5 4" stroke-width="2"/>`;
+  s += `<circle cx="${x(best)}" cy="${y(Math.min(...cs))}" r="6" fill="#DA4927"/>`;
+  s += `<text x="${L+8}" y="${T+2}" font-size="12" fill="#1E2A20">● минимум суммарной цены ошибок — порог ${fmt(best)}</text>`;
+  s += `<text x="${(L+W-R)/2}" y="${H-2}" font-size="11" text-anchor="middle" fill="#5E636B">порог</text>`;
+  document.getElementById("costchart").innerHTML = s;
+}
+function renderWeights(){
+  const c = M[key], m = c.model, rows = [];
+  m.num.forEach((f, i) => rows.push([m.labels[f] || f, m.num_coef[i]]));
+  let k = 0; for (const [f, vals] of Object.entries(m.cat)) vals.forEach(v => rows.push([`${(c.inputs.find(x=>x.name===f)||{}).label||f}: ${v}`, m.cat_coef[k++]]));
+  rows.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  const top = rows.slice(0, 12), mx = Math.max(...top.map(r => Math.abs(r[1])));
+  const evc = c.event_is_good ? "#37B34A" : "#DA4927", nec = c.event_is_good ? "#DA4927" : "#37B34A";
+  document.getElementById("w-sub").innerHTML = `Веса стандартизованных признаков (первые ${top.length} по модулю). Вправо — повышают вероятность «${c.event}», влево — снижают.`;
+  document.getElementById("weights").innerHTML = top.map(([n, v]) => {
+    const w = Math.abs(v) / mx * 50, left = v >= 0 ? 50 : 50 - w;
+    return `<div class="row"><span>${n}</span><div class="track"><i style="left:${left}%;width:${w}%;background:${v >= 0 ? evc : nec}"></i></div><span class="v">${v < 0 ? "−" : ""}${fmt(Math.abs(v))}</span></div>`;
+  }).join("");
+}
+function renderAll(){ renderTabs(); renderCase(); renderThreshold(); }
+
+document.getElementById("thr").oninput = renderThreshold;
+document.getElementById("cfp").oninput = () => renderCost(+document.getElementById("thr").value);
+document.getElementById("cfn").oninput = () => renderCost(+document.getElementById("thr").value);
+
+fetch("models.json").then(r => r.json()).then(data => {
+  M = data; key = M[location.hash.slice(1)] ? location.hash.slice(1) : "students";
+  // самопроверка: формула в браузере совпадает со sklearn
+  for (const [k, c] of Object.entries(M)) c.check.rows.forEach((row, i) => {
+    const d = Math.abs(predict(c, row) - c.check.p[i]); if (d > 1e-3) console.warn("расхождение", k, i, d);
+  });
+  renderAll();
+}).catch(e => { document.getElementById("question").innerHTML = `<span class="err">Не удалось загрузить models.json: ${e}</span>`; });
+</script>
+</body>
+</html>

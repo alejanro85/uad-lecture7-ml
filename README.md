@@ -11,6 +11,8 @@
 | `notebooks/` | Блокноты Google Colab с выполненным анализом и интерпретацией |
 | `data/` | Копии открытых датасетов для загрузки по raw-ссылкам |
 | `orange/` | Low-code схема Orange для того же датасета students.csv |
+| `webapps/` | Веб-формы для кейсов: Streamlit-приложение, экспорт моделей, руководство по средствам и шаблоны промптов |
+| `docs/` | Статическая веб-форма для GitHub Pages (работает без сервера) |
 | `img/` | Снимки экранов Orange, использованные в презентации |
 | `deck/`, `build/` | Скрипты сборки презентации и блокнотов |
 
@@ -26,6 +28,7 @@
 | 03 | Строительство: прочность бетона | [Colab](https://colab.research.google.com/github/alejanro85/uad-lecture7-ml/blob/main/notebooks/03_construction_concrete.ipynb) |
 | 04 | Производство: предиктивное обслуживание AI4I 2020 | [Colab](https://colab.research.google.com/github/alejanro85/uad-lecture7-ml/blob/main/notebooks/04_production_predictive_maintenance.ipynb) |
 | 05 | Связь ЛР1 и ЛР2: обратная задача, синтетический датасет | [Colab](https://colab.research.google.com/github/alejanro85/uad-lecture7-ml/blob/main/notebooks/05_reverse_task_synthetic_dataset.ipynb) |
+| 06 | Веб-формы в Colab: Colab Forms, ipywidgets, Gradio | [Colab](https://colab.research.google.com/github/alejanro85/uad-lecture7-ml/blob/main/notebooks/06_web_forms_gradio.ipynb) |
 
 Блокноты загружают данные по raw-ссылкам GitHub, поэтому в Colab достаточно выполнить «Среда выполнения → Выполнить все».
 
@@ -48,6 +51,12 @@
 3. Виджет File загружает `students_for_orange.csv` по raw-ссылке из этого репозитория. Если нужна работа без интернета, переключите виджет File на локальный файл `orange/students_for_orange.csv`.
 
 Схема: File → Data Table / Distributions / Box Plot; Logistic Regression → Test and Score → Confusion Matrix; Nomogram.
+
+## Веб-формы
+
+- Веб-форма без сервера: [alejanro85.github.io/uad-lecture7-ml](https://alejanro85.github.io/uad-lecture7-ml/). На ней пять кейсов, форма «что если», порог, матрица несоответствий и цена ошибок.
+- Приложение Streamlit с загрузкой своего CSV лежит в `webapps/streamlit_app/`.
+- Руководство по выбору средств и развёртыванию: [`webapps/README.md`](webapps/README.md). Шаблоны промптов для LLM: [`webapps/PROMPTS.md`](webapps/PROMPTS.md).
 
 ## Ссылка на данные в ЛР2
 
